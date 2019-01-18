@@ -1,0 +1,2 @@
+class Pleasure < ApplicationRecord
+end

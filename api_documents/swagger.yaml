@@ -1,0 +1,154 @@
+swagger: "2.0"
+info:
+  description: "API eSenior"
+  version: "1.0.0"
+  title: "Swagger Petstore"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "apiteam@swagger.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost:3000"
+tags:
+- name: "User"
+  description: "Operationes sobre usario"
+- name: "Recordatorios"
+
+schemes:
+- "https"
+- "http"
+paths:
+  /login:
+    post:
+      tags:
+        - "User"
+      summary: "Login para obtener Token"
+      description: ""
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters: 
+      - name: email
+        in: formData
+        type: string
+        required: true
+      - name: password
+        in: formData
+        type: string
+        required: true
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: object
+            properties:
+              auth_token:
+                example: "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE1NDA0ODIzNjJ9.lfm7PnWXp-2I39SfpQrQMlkEb01EPTpFdMi6EJdEAUs"
+        401:
+          description: "Error invalid Credential"
+          schema:
+            type: object
+            properties:
+              error:
+                type: object
+                properties:
+                  user_authentication:
+                    type: array
+                    items:
+                      type: string
+                      example: "invalid credentials"
+        
+  /recordatorios:
+    post:
+      tags:
+      - "Recordatorios"
+      summary: "Añadir un nuevo recordatorio"
+      description: ""
+      operationId: "addPet"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      security:
+      - Token: []
+      parameters:
+      - name: Texto
+        in: formData
+        description: "Texto descriptivo del recordatorio"
+        required: true
+        type: string
+      - name: Data
+        in: formData
+        description: "Fecha del recordatorio"
+        required: true
+        type: string
+      responses:
+        201:
+          description: "Recordatorio creado"
+          schema:
+            $ref: '#/definitions/Recordatorio'
+        401:
+          description: "Not Authorized"
+          schema:
+            type: object
+            properties:
+              error:
+                example: Not Authorized
+    get:
+      tags:
+      - "Recordatorios"
+      summary: "Obtener todos los recordatorios de un usuario"
+      description: ""
+      operationId: "getRecordatorios"
+      produces:
+      - "application/json"
+      security:
+      - Token: []
+      responses:
+         200:
+          description: "OK"
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Recordatorio'
+         401:
+          description: "Not Authorized"
+          schema:
+            type: object
+            properties:
+              error:
+                example: Not Authorized
+          
+securityDefinitions:
+  Token:
+    type: apiKey
+    description: Token para realizar todas las peticiones
+    name: Authorization
+    in: header
+    
+definitions:
+  Recordatorio:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+        example: 22
+      data:
+        type: "string"
+        example: "2-12-2018"
+      texto:
+        type: "string"
+        example: "Test"
+      created_at:
+        type: "string"
+        format: "date-time"
+        example: "2018-10-24T15:21:11.000Z"
+      updated_at:
+        type: "string"
+        format: "date-time"
+        example: "2018-10-24T15:21:11.000Z"
+    xml:
+      name: "Recordatorio"

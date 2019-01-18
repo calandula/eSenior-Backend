@@ -1,0 +1,6 @@
+Users#NewUser
+
+<%= @user.name %>, find me in app/views/users_mailer/NewUser.text.erb
+
+
+<%= confirm_email_user_url(@user.confirm_token) %>
